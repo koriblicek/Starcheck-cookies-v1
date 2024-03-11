@@ -14,7 +14,7 @@ export function CookiesFab({ isOpened, onClick }: ICookiesFabProps) {
 
     return (
         <Zoom in={isOpened}>
-            <Fab sx={{ position: 'absolute', bottom: 10, left: 10 }} size='small' color="primary" title={t('titles.cookie_settings')} onClick={onClick}>
+            <Fab sx={{ position: 'fixed', bottom: 10, left: 10 }} size='small' color="primary" title={t('titles.cookie_settings')} onClick={onClick}>
                 <Icon path={mdiCookieOutline} size={1} />
             </Fab>
         </Zoom>

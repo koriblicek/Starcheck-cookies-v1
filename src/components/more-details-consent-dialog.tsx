@@ -4,14 +4,14 @@ import { mdiClose } from '@mdi/js';
 import { BUTTON_ICON_SIZE, EnumUserAction, STARCHECK_LINK } from 'src/types';
 import { forwardRef, useEffect, useState } from 'react';
 import { TransitionProps } from '@mui/material/transitions';
-import starchecklogo from 'src/assets/starcheck_logo64x64.png';
-import Icon from '@mdi/react';
 import { useTranslation } from 'react-i18next';
-import TabPanel from './shared/tab-panel';
 import { CookieDeclaration } from './cookie-declaration';
 import { useDispatch } from 'react-redux';
 import { cookiesUserDataActions } from 'src/store/data/cookiesUserDataSlice';
 import { useAppSelector } from 'src/store/hooks';
+import starchecklogo from 'src/assets/starcheck_logo64x64.png';
+import Icon from '@mdi/react';
+import TabPanel from './shared/tab-panel';
 
 const Transition = forwardRef(function Transition(
     props: TransitionProps & {
@@ -51,6 +51,7 @@ export function MoreDetailsConsentDialog({ isOpened, onClose }: IMainConsentDial
 
     const theme = useTheme();
     const fullScreenMode = useMediaQuery(theme.breakpoints.down('sm'));
+    //const buttonsFullWidth = useMediaQuery("(max-width:300px)");
 
     const { t } = useTranslation();
 
@@ -90,9 +91,9 @@ export function MoreDetailsConsentDialog({ isOpened, onClose }: IMainConsentDial
 
                 </Grid>
             </Grid>
-            <DialogContent dividers sx={{ flexGrow: 1 }}>
+            <DialogContent dividers >
                 <Typography variant='h6'>{t('dialogs.using_cookies_title')}</Typography>
-                <Typography variant='body1'>{t('dialogs.using_cookies_text')}</Typography>
+                <Typography variant='subtitle2'>{t('dialogs.using_cookies_text')}</Typography>
                 <Tabs
                     value={value}
                     onChange={handleChange}
@@ -110,7 +111,7 @@ export function MoreDetailsConsentDialog({ isOpened, onClose }: IMainConsentDial
                     />
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                    <Typography variant="body1">{t('dialogs.about_cookies_text')}</Typography>
+                    <Typography variant="subtitle2">{t('dialogs.about_cookies_text')}</Typography>
                 </TabPanel>
             </DialogContent >
             <DialogActions sx={{ p: 1, flexGrow: 0 }}>
@@ -142,7 +143,7 @@ export function MoreDetailsConsentDialog({ isOpened, onClose }: IMainConsentDial
                             isChanged
                                 ?
 
-                                <Button color="primary" variant="contained" sx={{ borderRadius: 0 }}
+                                <Button fullWidth={fullScreenMode} color="primary" variant="contained" sx={{ borderRadius: 0 }}
                                     onClick={() => {
                                         dispatch(cookiesUserDataActions.saveUserCookies({ action: EnumUserAction.ACCEPTED_SELECTED }));
                                         setIsChanged(true);

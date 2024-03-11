@@ -1,11 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { cookiesUserDataReducer } from './data/cookiesUserDataSlice';
-import { cookiesDataReducer } from './data/cookiesDataSlice';
 
 export const store = configureStore({
   reducer: {
-    cookiesUserData: cookiesUserDataReducer,
-    cookiesData: cookiesDataReducer
+    cookiesUserData: cookiesUserDataReducer
   }
 });
 

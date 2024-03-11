@@ -4,18 +4,15 @@ import { useDispatch } from "react-redux";
 import { Fragment } from "react/jsx-runtime";
 import { cookiesUserDataActions } from "src/store/data/cookiesUserDataSlice";
 import { useAppSelector } from "src/store/hooks";
-import { EnumCookieCategories, ICookiesData } from "src/types";
+import { EnumCookieCategories } from "src/types";
 import { isInstance } from "src/utils";
 
 interface ICookieDeclarationItem {
     id: string;
-    data: ICookiesData;
     onChange: () => void;
 }
-function CookieDeclarationItem({ id, data, onChange }: ICookieDeclarationItem) {
+function CookieDeclarationItem({ id, onChange }: ICookieDeclarationItem) {
 
-    console.log(data);
-    
     const dispatch = useDispatch();
 
     const { userData } = useAppSelector(state => state.cookiesUserData);
@@ -27,7 +24,7 @@ function CookieDeclarationItem({ id, data, onChange }: ICookieDeclarationItem) {
             <Typography variant="h6">{t(`controls.cookie_${id}`)}</Typography>
             <Grid container gap={1} alignItems='center' justifyContent='space-between'>
                 <Grid item xs >
-                    <Typography variant="caption">{t(`dialogs.cookie_${id}_explanation`)}</Typography>
+                    <Typography variant="subtitle2">{t(`dialogs.cookie_${id}_explanation`)}</Typography>
                 </Grid>
                 <Grid item>
                     {(isInstance(id, EnumCookieCategories) as boolean) &&
@@ -49,24 +46,22 @@ interface ICookieDeclaration {
 }
 export function CookieDeclaration({ onChange }: ICookieDeclaration) {
 
-    const { data } = useAppSelector(state => state.cookiesData);
-
     return (
         <Grid container gap={1}>
             <Grid item>
-                <CookieDeclarationItem id={EnumCookieCategories.NECESSARY} data={data} onChange={onChange} />
+                <CookieDeclarationItem id={EnumCookieCategories.NECESSARY} onChange={onChange} />
             </Grid>
             <Grid item>
-                <CookieDeclarationItem id={EnumCookieCategories.PREFERENCES} data={data} onChange={onChange} />
+                <CookieDeclarationItem id={EnumCookieCategories.PREFERENCES} onChange={onChange} />
             </Grid>
             <Grid item>
-                <CookieDeclarationItem id={EnumCookieCategories.STATISTICS} data={data} onChange={onChange} />
+                <CookieDeclarationItem id={EnumCookieCategories.STATISTICS} onChange={onChange} />
             </Grid>
             <Grid item>
-                <CookieDeclarationItem id={EnumCookieCategories.MARKETING} data={data} onChange={onChange} />
+                <CookieDeclarationItem id={EnumCookieCategories.MARKETING} onChange={onChange} />
             </Grid>
             <Grid item>
-                <CookieDeclarationItem id="unclasified" data={data} onChange={onChange} />
+                <CookieDeclarationItem id={EnumCookieCategories.UNCLASIFIED} onChange={onChange} />
             </Grid>
         </Grid>
     );

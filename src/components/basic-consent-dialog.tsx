@@ -66,10 +66,10 @@ export function BasicConsentDialog({ isOpened, onClose, onMoreDetails }: IBasicC
                 </Grid>
             </Grid>
             <DialogContent dividers sx={{ p: 1 }}>
-                <Typography variant='caption'>
+                <Typography variant='subtitle2'>
                     {t('dialogs.using_cookies_text')}
                 </Typography>
-                <Stack direction='column' gap={1}>
+                <Stack direction='column' gap={0}>
                     {Object.values(EnumCookieCategories).map((value) => {
                         const isNecessary = value === EnumCookieCategories.NECESSARY;
                         return (
@@ -78,7 +78,7 @@ export function BasicConsentDialog({ isOpened, onClose, onMoreDetails }: IBasicC
                                 control={
                                     <Checkbox
                                         size='medium'
-                                        sx={{ ml: 0.5, p: 0.5 }}
+                                        sx={{ p: .5, ml: 1 }}
                                         disabled={isNecessary}
                                         checked={userData.data.includes(value)}
                                         onChange={() => {
@@ -93,6 +93,8 @@ export function BasicConsentDialog({ isOpened, onClose, onMoreDetails }: IBasicC
                         );
                     })
                     }
+                </Stack>
+                <Stack direction='column' gap={1}>
                     <Button color="primary" variant="text" size="small" sx={{ borderRadius: 0 }} startIcon={<Icon path={mdiCog} size={BUTTON_ICON_SIZE} />}
                         onClick={() => {
                             onMoreDetails();

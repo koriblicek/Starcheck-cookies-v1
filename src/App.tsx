@@ -1,18 +1,15 @@
-import { ThemeProvider } from "@mui/material";
-import { CustomTheme } from "./theme/theme";
 import { Layout } from "./components/layout";
+import { Fragment } from "react";
+import { UpdateComponent } from "./components/update-component";
 
 function App() {
 
-  const theme = new CustomTheme('#2a7163').getTheme();
-
-  return (
-    <>
-      <ThemeProvider theme={theme}>
-        <Layout />
-      </ThemeProvider>
-    </>
-  );
+    return (
+        <Fragment>
+            <Layout />
+            <UpdateComponent />
+        </Fragment>
+    );
 }
 
 export default App;
