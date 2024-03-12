@@ -75,9 +75,9 @@ export function MoreDetailsConsentDialog({ isOpened, onClose }: IMainConsentDial
                         onClick={() => window.open(STARCHECK_LINK, "_blank")}
                         endIcon={<Avatar src={starchecklogo} />}
                         sx={{ borderRadius: 0 }}
-                        title={t('titles.starcheck')}
+                        title={t('titles.starcheck_sk')}
                     >
-                        Created by
+                        {t('labels.created_by')}
                     </Button>
                 </Grid>
                 <Grid item sx={{ position: 'absolute', right: 8 }}>

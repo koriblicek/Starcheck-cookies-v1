@@ -1,18 +1,23 @@
 import { AppGetUserCookie } from './AppGetUserCookie.tsx';
 import { Provider } from 'react-redux';
 import { store } from './store/store.ts';
-import { CustomTheme } from './theme/theme.ts';
-import { ThemeProvider } from '@mui/material';
 import ReactDOM from 'react-dom/client';
+import './translations/i18n';
 
-const theme = new CustomTheme('#2a7163').getTheme();
+const rootElement = document.getElementById('APICOOKIES-root');
+console.log("react", rootElement);
+if (rootElement) {
+    // const dataId = document.currentScript?.getAttribute("data-id");
+    const dataColor = rootElement.getAttribute("data-color");
+    const dataLng = rootElement.getAttribute("data-lng");
+    console.log(dataColor, dataLng);
 
-ReactDOM.createRoot(document.getElementById('APICOOKIES-root')!).render(
-    // <React.StrictMode>
-    <Provider store={store}>
-        <ThemeProvider theme={theme}>
-            <AppGetUserCookie />
-        </ThemeProvider>
-    </Provider>
-    // </React.StrictMode>,
-);
+
+    ReactDOM.createRoot(rootElement).render(
+        // <React.StrictMode>
+        <Provider store={store}>
+            <AppGetUserCookie lng={dataLng ? dataLng : "gb"} color={dataColor ? dataColor : "#000000"} />
+        </Provider>
+        // </React.StrictMode>,
+    );
+}

@@ -16,20 +16,44 @@ export const cookiesUserDataSlice = createSlice({
     initialState,
     reducers: {
         initializeUserData: (state, action: PayloadAction<{ data: ICookiesUserSettings; }>) => {
+            let saveIsNeeded = false;
             //verify action
-            const dataAction = action.payload.data.action;
-            //if wrong data set as no action
-            const verifiedAction = isInstance(dataAction, EnumUserAction) as boolean ? dataAction : EnumUserAction.NO_ACTION;
+            let verifiedAction = action.payload.data.action;
+            if (!verifiedAction || !isInstance(verifiedAction, EnumUserAction) as boolean) {
+                verifiedAction = EnumUserAction.NO_ACTION
+                saveIsNeeded = true;
+            }
             //verify categories - keep only correct ones
-            const verifiedData = action.payload.data.data.filter((item) => isInstance(item, EnumCookieCategories));
+            let verifiedData: EnumCookieCategories[] = [];
+            //if data exists and they are array - push categories into verified data variable
+            if (action.payload.data.data && Array.isArray(action.payload.data.data)) {
+                verifiedData = action.payload.data.data.filter((item) => isInstance(item, EnumCookieCategories));
+            } else {
+                verifiedAction = EnumUserAction.NO_ACTION;
+                saveIsNeeded = true;
+            }
             //add necessary category if not presented
             if (!verifiedData.includes(EnumCookieCategories.NECESSARY)) {
                 verifiedData.push(EnumCookieCategories.NECESSARY);
+                verifiedAction = EnumUserAction.NO_ACTION;
+                saveIsNeeded = true;
             }
-            const dataTimestamp = action.payload.data.timestamp;
-            const verifiedTimestamp = isInstance(dataTimestamp, Number) as boolean ? dataTimestamp : Date.now();
+            //verify timestamp
+            let verifiedTimestamp = Number(action.payload.data.timestamp);
+            if (!verifiedTimestamp || verifiedTimestamp < 0 || verifiedTimestamp > Date.now()) {
+                console.log(verifiedTimestamp);
+               
+                verifiedTimestamp = Date.now();
+                verifiedAction = EnumUserAction.NO_ACTION;
+                saveIsNeeded = true;
+            }
             //initialize user data
-            state.userData = { action: verifiedAction, timestamp: verifiedTimestamp, data: verifiedData };
+            const verifiedState = { action: verifiedAction, timestamp: verifiedTimestamp, data: verifiedData };
+            state.userData = verifiedState;
+            if (saveIsNeeded) {
+                const cookies = new Cookies();
+                cookies.set(COOKIE_API_CONSENT_NAME, JSON.stringify(verifiedState), { expires: new Date(Date.now() + COOKIE_EXPIRES) });
+            }
         },
         toggleCategory: (state, action: PayloadAction<{ category: EnumCookieCategories; }>) => {
             if (state.userData.data.includes(action.payload.category)) {
@@ -43,24 +67,24 @@ export const cookiesUserDataSlice = createSlice({
             switch (action.payload.action) {
                 case EnumUserAction.REJECTED: {
                     const rejected = { action: action.payload.action, timestamp: Date.now(), data: [EnumCookieCategories.NECESSARY] } as ICookiesUserSettings;
-                    cookies.set(COOKIE_API_CONSENT_NAME, encodeURIComponent(JSON.stringify(rejected)), { expires: new Date(Date.now() + COOKIE_EXPIRES) });
+                    cookies.set(COOKIE_API_CONSENT_NAME, JSON.stringify(rejected), { expires: new Date(Date.now() + COOKIE_EXPIRES) });
                     state.userData = rejected;
                     break;
                 }
                 case EnumUserAction.ACCEPTED_SELECTED: {
                     const selected = { action: action.payload.action, timestamp: Date.now(), data: [...state.userData.data] } as ICookiesUserSettings;
-                    cookies.set(COOKIE_API_CONSENT_NAME, encodeURIComponent(JSON.stringify(selected)), { expires: new Date(Date.now() + COOKIE_EXPIRES) });
+                    cookies.set(COOKIE_API_CONSENT_NAME, JSON.stringify(selected), { expires: new Date(Date.now() + COOKIE_EXPIRES) });
                     state.userData = selected;
                     break;
                 }
                 case EnumUserAction.ACCEPTED_ALL: {
                     const all = { action: action.payload.action, timestamp: Date.now(), data: [...Object.values(EnumCookieCategories).map(value => value)] } as ICookiesUserSettings;
-                    cookies.set(COOKIE_API_CONSENT_NAME, encodeURIComponent(JSON.stringify(all)), { expires: new Date(Date.now() + COOKIE_EXPIRES) });
+                    cookies.set(COOKIE_API_CONSENT_NAME, JSON.stringify(all), { expires: new Date(Date.now() + COOKIE_EXPIRES) });
                     state.userData = all;
                     break;
                 }
                 case EnumUserAction.NO_ACTION: {
-                    cookies.set(COOKIE_API_CONSENT_NAME, encodeURIComponent(JSON.stringify(defaultCookiesUserSettings)), { expires: new Date(Date.now() + COOKIE_EXPIRES) });
+                    cookies.set(COOKIE_API_CONSENT_NAME, JSON.stringify(defaultCookiesUserSettings), { expires: new Date(Date.now() + COOKIE_EXPIRES) });
                     break;
                 }
             }

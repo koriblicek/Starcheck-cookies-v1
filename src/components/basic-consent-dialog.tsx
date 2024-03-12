@@ -135,7 +135,7 @@ export function BasicConsentDialog({ isOpened, onClose, onMoreDetails }: IBasicC
                     >
                         {t('controls.reject_all')}
                     </Button>
-                    <Link variant='caption' underline='hover' textAlign={'center'} target='_blank' href={STARCHECK_LINK} >Created by STARCHECK</Link>
+                    <Link variant='caption' underline='hover' textAlign={'center'} target='_blank' href={STARCHECK_LINK}>{t('controls.created_by_starcheck_sk')}</Link>
                 </Stack>
             </DialogContent>
         </Dialog>);
