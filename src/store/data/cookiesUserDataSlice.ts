@@ -41,8 +41,6 @@ export const cookiesUserDataSlice = createSlice({
             //verify timestamp
             let verifiedTimestamp = Number(action.payload.data.timestamp);
             if (!verifiedTimestamp || verifiedTimestamp < 0 || verifiedTimestamp > Date.now()) {
-                console.log(verifiedTimestamp);
-               
                 verifiedTimestamp = Date.now();
                 verifiedAction = EnumUserAction.NO_ACTION;
                 saveIsNeeded = true;

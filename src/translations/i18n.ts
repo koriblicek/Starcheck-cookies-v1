@@ -39,9 +39,6 @@ i18next
                         cookie_marketing_explanation: "Marketing cookies, also referred to as advertising cookies, are cookies that track users across websites to build a profile of their interests and preferences. These cookies are used by advertisers and marketers to deliver targeted advertisements to users based on their browsing history and behavior.",
                         cookie_unclasified_explanation: "'Unclassified cookies' typically refer to cookies that do not fall into predefined categories such as necessary, preference, statistics, or marketing cookies. These cookies may have various purposes or functions depending on how they are used by the website.",
                     },
-                    labels: {
-                        created_by: 'Created by ',
-                    },
                     languages: {
                         sk: 'Slovak',
                         gb: 'English',
@@ -80,9 +77,6 @@ i18next
                         cookie_statistics_explanation: "Štatistické súbory cookies, tiež známe ako analytické súbory cookies, sa používajú na zbieranie informácií o tom, ako návštevníci interagujú s webovou stránkou. Tieto súbory cookies zbierajú údaje, ako je počet návštevníkov webovej stránky, stránky, ktoré navštívili, dĺžka ich návštevy a zdroje, odkiaľ prišli. Zozbierané informácie sú zvyčajne agregované a anonymizované, čo znamená, že jednotliví používatelia nemôžu byť identifikovaní.",
                         cookie_marketing_explanation: "Cielené súbory cookies, tiež nazývané reklamné súbory cookies, sú súbory cookies, ktoré sledujú používateľov na rôznych webových stránkach za účelom vytvorenia profilu ich záujmov a preferencií. Tieto súbory cookies sú používané reklamistami a marketérmi na zasielanie cielených reklám používateľom na základe ich prehliadacej histórie a správania.",
                         cookie_unclasified_explanation: "Neklasifikované súbory cookies obvykle odkazujú na súbory cookies, ktoré nespadajú do preddefinovaných kategórií, ako sú nevyhnutné, preferencie, štatistiky alebo marketingové súbory cookies. Tieto súbory cookies môžu mať rôzne účely alebo funkcie v závislosti na tom, ako sú používané webovou stránkou."
-                    },
-                    labels: {
-                        created_by: 'Vytvoril ',
                     },
                     languages: {
                         sk: 'Slovenčina',

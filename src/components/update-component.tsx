@@ -4,16 +4,41 @@ import { useAppSelector } from "src/store/hooks";
 import { ATTR_PREFIX, COOKIES_API_CATEGORY_NAME, ELEMENTS_TO_PROCEED, EnumCookieCategories } from "src/types";
 import { isInstance } from "src/utils";
 
+//checks if all items from 1st array are presented in the 2nd array
+function check(targetarr: string[], arr: string[]) {
+    return targetarr.map((e) => {
+        return (arr.includes(e.trim())) ? true : false;
+    }).every((e) => e === true);
+}
+
 function updatePageScripts(consentGiven: EnumCookieCategories[]) {
+
     const list = document.querySelectorAll(`[${COOKIES_API_CATEGORY_NAME}]`);
+
     list.forEach(node => {
         const elementID = ELEMENTS_TO_PROCEED.findIndex(element => node.tagName === element[0]);
         if ((node.nodeType === Node.ELEMENT_NODE) && (elementID >= 0)) {
+
             //check if COOKIES_API_CATEGORY_NAME attribute is presented
-            const attrConsentValue = node.getAttribute(COOKIES_API_CATEGORY_NAME) as EnumCookieCategories;
-            if (isInstance(attrConsentValue, EnumCookieCategories)) {
-                //check if consent is given
-                if (consentGiven.includes(attrConsentValue)) {
+            //const attrConsentValue = node.getAttribute(COOKIES_API_CATEGORY_NAME) as EnumCookieCategories;
+            //if (isInstance(attrConsentValue, EnumCookieCategories)) {
+            //check if consent is given
+            //read all categories
+            const attrConsentValue = node.getAttribute(COOKIES_API_CATEGORY_NAME);
+            if (attrConsentValue) {
+                //get all categories
+                const allCategories = attrConsentValue.split(",");
+                //check if all given categories are correctly typed
+                const filteredCategories = allCategories.filter((category) => {
+                    if (isInstance(category.trim(), EnumCookieCategories)) {
+                        return true;
+                    } else {
+                        console.error(`CookiesAPI-Observer (${node.tagName}): Attribute value '${category.trim()}' for '${COOKIES_API_CATEGORY_NAME}' attribute is wrong!`);
+                        return false;
+                    }
+                });
+                if (check(filteredCategories, consentGiven)) {
+                    //if (consentGiven.includes(attrConsentValue)) {
                     //check if attribute to be changed is presented
                     const attrValue = node.getAttribute(`${ATTR_PREFIX}${ELEMENTS_TO_PROCEED[elementID][1]}`);
                     if (attrValue) {
@@ -25,17 +50,24 @@ function updatePageScripts(consentGiven: EnumCookieCategories[]) {
                     //if attribute to be changed is in script element
                     //we will modify also type attribute
                     if (node.tagName === "SCRIPT") {
-                        console.log(node.tagName, attrConsentValue, attrValue);
-                        const srcValue = node.getAttribute("src");
-                        node.setAttribute('src', srcValue ? srcValue : "");
-                        if (node.hasAttribute(`${ATTR_PREFIX}type`)) {
+                        // const srcValue = node.getAttribute("src");
+                        // node.setAttribute('src', srcValue ? srcValue : "");
+                        const typeAttrValue = node.getAttribute(`${ATTR_PREFIX}type`);
+                        if (typeAttrValue) {
                             //store value
                             const attrValue = node.getAttribute(`${ATTR_PREFIX}type`);
                             //modify correct attribute
                             node.setAttribute(`type`, attrValue ? attrValue : "");
                             //remove modified attribute
                             node.removeAttribute(`${ATTR_PREFIX}type`);
+                        } else {
+                            //if script had no data-type attribute before - we will add it to be able to run script
+                            node.setAttribute(`type`, "text/javascript");
                         }
+                        //clone node
+                        const newNode = node.cloneNode(true);
+                        node.replaceWith(newNode);
+                        //node.remove();
                     }
                 } else {
                     const attrValue = node.getAttribute(`${ELEMENTS_TO_PROCEED[elementID][1]}`);
@@ -48,7 +80,6 @@ function updatePageScripts(consentGiven: EnumCookieCategories[]) {
                     //if attribute to be changed is in script element
                     //we will modify also type attribute
                     if (node.tagName === "SCRIPT") {
-                        console.log("-", node.tagName, attrConsentValue, attrValue);
                         if (!node.hasAttribute(`${ATTR_PREFIX}type`)) {
                             //store value
                             const attrValue = node.getAttribute("type");
@@ -59,9 +90,10 @@ function updatePageScripts(consentGiven: EnumCookieCategories[]) {
                         }
                     }
                 }
-            } else {
-                console.error(`CookiesAPI (${node.tagName}): Attribute value '${attrConsentValue}' for '${COOKIES_API_CATEGORY_NAME}' attribute is wrong!`);
             }
+            //} else {
+            //    console.error(`CookiesAPI-Visual (${node.tagName}): Attribute value '${attrConsentValue}' for '${COOKIES_API_CATEGORY_NAME}' attribute is wrong!`);
+            //}
         }
     });
 }
@@ -100,10 +132,10 @@ export function UpdateComponent() {
         }
         postData()
             .then(() => {
-                console.log("post ok");
+                //console.log("post ok");
             })
             .catch(() => {
-                console.log("post error");
+                console.error("post error");
             });
     }, [cookies]);
 

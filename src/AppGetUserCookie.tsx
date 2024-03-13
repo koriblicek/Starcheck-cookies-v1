@@ -3,10 +3,11 @@ import { Cookies } from "react-cookie";
 import { COOKIE_API_CONSENT_NAME, EnumUserAction } from "./types";
 import { useDispatch } from "react-redux";
 import { cookiesUserDataActions } from "./store/data/cookiesUserDataSlice";
-import App from "./App";
 import { useTranslation } from "react-i18next";
 import { CustomTheme } from "./theme/theme";
 import { ThemeProvider } from "@emotion/react";
+import { StyledEngineProvider } from "@mui/material";
+import App from "./App";
 
 interface IAppGetUserCookieProps {
     lng: string;
@@ -35,9 +36,11 @@ export function AppGetUserCookie({ lng, color }: IAppGetUserCookieProps) {
 
     return (
         <Fragment>
-            <ThemeProvider theme={new CustomTheme(color).getTheme()}>
-                {proceed && <App />}
-            </ThemeProvider>
+            <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={new CustomTheme(color).getTheme()}>
+                    {proceed && <App />}
+                </ThemeProvider>
+            </StyledEngineProvider>
         </Fragment>
     );
 

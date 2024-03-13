@@ -8,6 +8,13 @@ const consentCategories = ["necessary", "preferences", "statistics", "marketing"
 const cookies = document.cookie.split(";");
 const consentCookies = cookies.filter(cookie => cookie.trim().split("=")[0] === "CookiesApiConsent");
 
+//checks if all items from 1st array are presented in the 2nd array
+function check(targetarr, arr) {
+    return targetarr.map((e) => {
+        return (arr.includes(e.trim())) ? true : false;
+    }).every((e) => e === true);
+}
+
 let consentGiven = ["necessary"];
 //if there is cookie presented - try to load consent
 if (consentCookies.length === 1) {
@@ -40,8 +47,21 @@ const domObserver = new MutationObserver((mutations) => {
             if ((node.nodeType === Node.ELEMENT_NODE) && (elementID >= 0)) {
                 //check if COOKIES_API_CATEGORY_NAME attribute is presented
                 if (node.hasAttribute(COOKIES_API_CATEGORY_NAME)) {
+                    //read all categories
+                    const allCategories = node.getAttribute(COOKIES_API_CATEGORY_NAME).split(",");
+                    //check if all given categories are correctly typed
+                    const filteredCategories = allCategories.filter((category) => {
+                        if (consentCategories.includes(category.trim())) {
+                            return true;
+                        } else {
+                            console.error(`CookiesAPI-Observer (${node.tagName}): Attribute value '${category.trim()}' for '${COOKIES_API_CATEGORY_NAME}' attribute is wrong!`);
+                            return false;
+                        }
+                    });
                     //check if consent is not given
-                    if (!consentGiven.includes(node.getAttribute(COOKIES_API_CATEGORY_NAME))) {
+                    // if (!consentGiven.includes(category.trim())) {
+                    //check all categories (one script can be in several categories)
+                    if (!check(filteredCategories, consentGiven)) {
                         //check if attribute to be changed is presented
                         if (node.hasAttribute(elementsToProceed[elementID][1])) {
                             //set new attribute 'data-' preffix
@@ -81,7 +101,9 @@ data.forEach((id) => {
 
 const cookiesApiScript = document.createElement("script");
 cookiesApiScript.setAttribute("type", "module");
-cookiesApiScript.setAttribute("src", "cookies_api_v1.js");
+cookiesApiScript.setAttribute("src", `https://www.starcheck.sk/apijs/${document.currentScript.getAttribute('data-id')}/APICOOKIES/${document.currentScript.getAttribute('data-version')}/visual`);
+//local testing
+//cookiesApiScript.setAttribute("src", `/dist/cookies_api_v1.js`);
 
 function addConsentApi(cookiesApiDiv, cookiesApiScript) {
     document.body.append(cookiesApiDiv);
@@ -90,4 +112,4 @@ function addConsentApi(cookiesApiDiv, cookiesApiScript) {
 }
 
 window.addEventListener("DOMContentLoaded", (event) => addConsentApi(cookiesApiDiv, cookiesApiScript));
-console.log("observer");
+console.log("COOKIEAPI-Observer is running:", consentGiven);

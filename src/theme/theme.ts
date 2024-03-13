@@ -12,13 +12,6 @@ export class CustomTheme {
         const successBase = getSuccessColor(primaryBase);
         const warningBase = getWarningColor(primaryBase);
         this.__theme = createTheme({
-
-            typography: {
-                // fontFamily: "sans-serif",
-                button: {
-                    // fontSize: ".85em",
-                }
-            },
             palette: {
                 primary: {
                     main: primaryBase,
@@ -46,6 +39,65 @@ export class CustomTheme {
                 },
                 tonalOffset: 0.25
             },
+            components: {
+                MuiButton: {
+                    styleOverrides: {
+                        root: {
+                            // color: '',
+                            "&:hover": {
+                                color: primaryBase,
+                            }
+                        },
+                        outlined: {
+                            "&:hover": {
+                                color: primaryBase,
+                            }
+                        },
+                        contained: {
+                            "&:hover": {
+                                color: getContrastRatio(primaryBase, '#fff') > 4.5 ? '#fff' : '#111',
+                            }
+                        },
+                        text: {
+                            "&:hover": {
+                                color: primaryBase,
+                            }
+                        }
+                    }
+                },
+                MuiIconButton: {
+                    styleOverrides: {
+                        root: {
+                            color: 'inherit',
+                            "&:hover": {
+                                color: 'inherit'
+                            }
+
+                        }
+                    }
+                },
+                MuiFab: {
+                    styleOverrides: {
+                        root: {
+                            color: getContrastRatio(primaryBase, '#fff') > 4.5 ? '#fff' : '#111',
+                            "&:hover": {
+                                color: getContrastRatio(primaryBase, '#fff') > 4.5 ? '#fff' : '#111',
+                            }
+                        }
+                    }
+                },
+                MuiTab: {
+                    styleOverrides: {
+                        root: {
+                            color: primaryBase,
+                            '&:hover': {
+                                color: primaryBase,
+                                backgroundColor: 'white'
+                            }
+                        }
+                    }
+                }
+            }
         });
     }
 

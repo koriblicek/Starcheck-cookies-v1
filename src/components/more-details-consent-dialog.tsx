@@ -1,4 +1,4 @@
-import { Avatar, Button, Dialog, DialogActions, DialogContent, Grid, IconButton, Slide, Tab, Tabs, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, Grid, IconButton, Slide, Tab, Tabs, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { mdiChevronRight } from '@mdi/js';
 import { mdiClose } from '@mdi/js';
 import { BUTTON_ICON_SIZE, EnumUserAction, STARCHECK_LINK } from 'src/types';
@@ -9,7 +9,6 @@ import { CookieDeclaration } from './cookie-declaration';
 import { useDispatch } from 'react-redux';
 import { cookiesUserDataActions } from 'src/store/data/cookiesUserDataSlice';
 import { useAppSelector } from 'src/store/hooks';
-import starchecklogo from 'src/assets/starcheck_logo64x64.png';
 import Icon from '@mdi/react';
 import TabPanel from './shared/tab-panel';
 
@@ -65,7 +64,7 @@ export function MoreDetailsConsentDialog({ isOpened, onClose }: IMainConsentDial
             fullScreen={fullScreenMode}
             TransitionComponent={Transition}
             maxWidth="sm"
-            slotProps={{ backdrop: { style: { visibility: 'hidden' } } }}
+            slotProps={{ backdrop: { sx: { backgroundColor: '#ffffff66' } } }}
             sx={{ "& .MuiDialog-container": { alignItems: 'flex-end' } }}
         >
             <Grid container justifyContent='space-between' alignItems='center' sx={{ p: 1 }}>
@@ -73,11 +72,10 @@ export function MoreDetailsConsentDialog({ isOpened, onClose }: IMainConsentDial
                     <Button
                         size="small"
                         onClick={() => window.open(STARCHECK_LINK, "_blank")}
-                        endIcon={<Avatar src={starchecklogo} />}
                         sx={{ borderRadius: 0 }}
                         title={t('titles.starcheck_sk')}
                     >
-                        {t('labels.created_by')}
+                        {t('controls.created_by_starcheck_sk')}
                     </Button>
                 </Grid>
                 <Grid item sx={{ position: 'absolute', right: 8 }}>

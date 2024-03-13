@@ -43,7 +43,7 @@ export function BasicConsentDialog({ isOpened, onClose, onMoreDetails }: IBasicC
         <Dialog
             open={isOpened}
             TransitionComponent={Transition}
-            slotProps={{ backdrop: { style: { visibility: 'hidden' } } }}
+            slotProps={{ backdrop: { sx: { backgroundColor: '#ffffff66' } } }}
             PaperProps={{ elevation: 10 }}
             sx={{ maxWidth: 350, "& .MuiDialog-container": { alignItems: 'flex-end', justifyContent: 'flex-start' } }}
         >
@@ -57,6 +57,7 @@ export function BasicConsentDialog({ isOpened, onClose, onMoreDetails }: IBasicC
                     <IconButton
                         aria-label="close"
                         size='small'
+                        color="primary"
                         title={t('controls.close')}
                         onClick={onClose}
                     >
@@ -95,7 +96,9 @@ export function BasicConsentDialog({ isOpened, onClose, onMoreDetails }: IBasicC
                     }
                 </Stack>
                 <Stack direction='column' gap={1}>
-                    <Button color="primary" variant="text" size="small" sx={{ borderRadius: 0 }} startIcon={<Icon path={mdiCog} size={BUTTON_ICON_SIZE} />}
+                    <Button color="primary" variant="text" size="small"
+                        sx={{ borderRadius: 0 }}
+                        startIcon={<Icon path={mdiCog} size={BUTTON_ICON_SIZE} />}
                         onClick={() => {
                             onMoreDetails();
                         }}
