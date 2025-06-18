@@ -4,7 +4,7 @@ const ATTR_PREFIX = "data-ca-";
 const elementsToProceed = [["SCRIPT", "src"], ["IFRAME", "src"], ["IMG", "src"], ["LINK", "href"]];
 
 //const all categories
-const consentCategories = ["necessary", "preferences", "statistics", "marketing", "unclasified"];
+const consentCategories = ["necessary", "preferences", "statistics", "marketing", "unclasified", "unknown"];
 
 //load cookies
 const cookies = document.cookie.split(";");
@@ -119,76 +119,8 @@ if (consentCookies.length === 1) {
 }
 
 //links to report - not found in our database
-
 const linksToReport = [];
-/*
-const domObserver = new MutationObserver((mutations) => {
-    mutations.forEach(({ addedNodes }) => {
-        addedNodes.forEach(node => {
-            if (node.nodeType === Node.ELEMENT_NODE) {
 
-                const elementID = elementsToProceed.findIndex(element => node.tagName === element[0]);
-                // detect elemnt to proceed (in the list of elementsToProceed)
-                if ((elementID >= 0)) {
-                    //check if COOKIES_API_CATEGORY_NAME attribute is not presented
-                    //add it based on "database" - CATEGORY_BY_URL
-                    if (!node.hasAttribute(COOKIES_API_CATEGORY_NAME)) {
-                        // Fallback kategorizácia podľa URL
-                        const attrName = elementsToProceed[elementID][1];
-                        const attrValue = node.getAttribute(attrName);
-                        if (attrValue) {
-                            const matchEntry = CATEGORY_BY_URL.find(entry => attrValue.includes(entry.match));
-                            if (matchEntry && Array.isArray(matchEntry.categories)) {
-                                allCategories = matchEntry.categories;
-                                // console.warn(`CookiesAPI-Observer (${node.tagName}): Fallback matched '${matchEntry.match}' → [${matchEntry.categories.join(", ")}]`);
-                                node.setAttribute(COOKIES_API_CATEGORY_NAME, allCategories.join(","));
-                            } else {
-                                // console.log(`CookiesAPI-Observer (${node.tagName}): Fallback not matched src: '${attrValue}'`);
-                                linksToReport.push(attrValue);
-                            }
-                        }
-                    }
-                    if (node.hasAttribute(COOKIES_API_CATEGORY_NAME)) {
-                        //read all categories
-                        const allCategories = node.getAttribute(COOKIES_API_CATEGORY_NAME).split(",");
-                        //check if all given categories are correctly typed
-                        const filteredCategories = allCategories.filter((category) => {
-                            if (consentCategories.includes(category.trim())) {
-                                return true;
-                            } else {
-                                // console.error(`CookiesAPI-Observer (${node.tagName}): Attribute value '${category.trim()}' for '${COOKIES_API_CATEGORY_NAME}' attribute is wrong!`);
-                                return false;
-                            }
-                        });
-                        //check if consent is not given
-                        // if (!consentGiven.includes(category.trim())) {
-                        //check all categories (one script can be in several categories)
-                        if (!check(filteredCategories, consentGiven)) {
-                            //check if attribute to be changed is presented
-                            if (node.hasAttribute(elementsToProceed[elementID][1])) {
-                                //set new attribute 'data-' preffix
-                                const attrValue = node.getAttribute(elementsToProceed[elementID][1]);
-                                node.setAttribute(`${ATTR_PREFIX}${elementsToProceed[elementID][1]}`, attrValue);
-                                //delete old attribute
-                                node.removeAttribute(elementsToProceed[elementID][1]);
-                            }
-                            //if attribute to be changed is in script element
-                            //we will modify also type attribute
-                            if (node.tagName === "SCRIPT") {
-                                //set modified attribute 
-                                const attrValue = node.getAttribute("type");
-                                node.setAttribute(`${ATTR_PREFIX}type`, attrValue ? attrValue : "");
-                                //set correct attribute
-                                node.setAttribute(`type`, "text/plain");
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    });
-});
-*/
 const domObserver = new MutationObserver((mutations) => {
     mutations.forEach(({ addedNodes }) => {
         addedNodes.forEach(node => {
@@ -212,6 +144,7 @@ const domObserver = new MutationObserver((mutations) => {
                     if (matchEntry?.categories?.length) {
                         node.setAttribute(COOKIES_API_CATEGORY_NAME, matchEntry.categories.join(","));
                     } else {
+                        node.setAttribute(COOKIES_API_CATEGORY_NAME, "unknown");
                         linksToReport.push(attrValue); // na reportovanie nenájdených fallbackov
                     }
                 }
@@ -219,6 +152,8 @@ const domObserver = new MutationObserver((mutations) => {
 
             // Znovu over, či element už má kategóriu
             if (!node.hasAttribute(COOKIES_API_CATEGORY_NAME)) return;
+            //if unknown return
+            if (node.getAttribute(COOKIES_API_CATEGORY_NAME) === "unknown") return;
 
             //read all categories from element
             const allCategories = node.getAttribute(COOKIES_API_CATEGORY_NAME).split(",");
@@ -276,9 +211,9 @@ function addConsentApi(cookiesApiDiv, cookiesApiScript) {
 
 //if content loaded - insert consent api div and script
 window.addEventListener("DOMContentLoaded", (event) => {
-    //remove for testing local version
+    //add comment during testing local version
     addConsentApi(cookiesApiDiv, cookiesApiScript);
-    console.log(linksToReport);
+    //console.log(linksToReport);
 });
 
 console.log("COOKIEAPI-Observer is running:", consentGiven);

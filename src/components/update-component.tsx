@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
 import { useAppSelector } from "src/store/hooks";
 import { ATTR_PREFIX, COOKIES_API_CATEGORY_NAME, ELEMENTS_TO_PROCEED, EnumCookieCategories } from "src/types";
 import { isInstance } from "src/utils";
@@ -9,7 +9,9 @@ function check(targetarr: string[], arr: string[]) {
     return targetarr.every((e) => arr.includes(e.trim()));
 }
 
-function updatePageScripts(consentGiven: EnumCookieCategories[]) {
+function updatePageScripts(consentGiven: EnumCookieCategories[]): string[] {
+
+    const returnList: string[] = [];
 
     const list = document.querySelectorAll(`[${COOKIES_API_CATEGORY_NAME}]`);
 
@@ -31,7 +33,14 @@ function updatePageScripts(consentGiven: EnumCookieCategories[]) {
                     if (isInstance(category.trim(), EnumCookieCategories)) {
                         return true;
                     } else {
-                        console.error(`CookiesAPI-Observer (${node.tagName}): Attribute value '${category.trim()}' for '${COOKIES_API_CATEGORY_NAME}' attribute is wrong!`);
+                        if (category.trim() === "unknown") {
+                            const link = node.getAttribute(ELEMENTS_TO_PROCEED[elementID][1]);
+                            if (link) {
+                                returnList.push(link);
+                            }
+                        } else {
+                            console.error(`CookiesAPI-Observer (${node.tagName}): Attribute value '${category.trim()}' for '${COOKIES_API_CATEGORY_NAME}' attribute is wrong!`);
+                        }
                         return false;
                     }
                 });
@@ -41,6 +50,7 @@ function updatePageScripts(consentGiven: EnumCookieCategories[]) {
                     //check if attribute to be changed is presented
                     const attrValue = node.getAttribute(`${ATTR_PREFIX}${ELEMENTS_TO_PROCEED[elementID][1]}`);
                     if (attrValue) {
+                        console.log(attrValue);
                         //modify correct attribute
                         node.setAttribute(`${ELEMENTS_TO_PROCEED[elementID][1]}`, attrValue);
                         //remove modified attribute
@@ -91,11 +101,18 @@ function updatePageScripts(consentGiven: EnumCookieCategories[]) {
                 }
 
             }
+            else {
+                returnList.push(node.getAttribute(ELEMENTS_TO_PROCEED[elementID][1]) as string);
+                //missing COOKIES_API_CATEGORY_NAME attribute
+
+            }
             //} else {
             //    console.error(`CookiesAPI-Visual (${node.tagName}): Attribute value '${attrConsentValue}' for '${COOKIES_API_CATEGORY_NAME}' attribute is wrong!`);
             //}
         }
     });
+    console.log(returnList);
+    return returnList;
 
 }
 
@@ -103,23 +120,25 @@ export function UpdateComponent() {
 
     const [prevTimestamp, setPrevTimestamp] = useState<number>(0);
 
+    const [listOfLink, setListOfLinks] = useState<string[]>([]);
+
     const { data, timestamp } = useAppSelector(state => state.cookiesUserData.userData);
 
-    const [cookies] = useCookies();
+    //const [cookies] = useCookies();
 
     useEffect(() => {
         if (timestamp !== prevTimestamp) {
-            updatePageScripts(data);
+            setListOfLinks(updatePageScripts(data));
             setPrevTimestamp(timestamp);
         }
     }, [timestamp, data]);
 
     useEffect(() => {
         async function postData() {
-            const cookiesBody = {
-                [window.location.href]:
-                    Object.keys(cookies).map(key => { return { [key]: cookies[key] }; })
-            };
+            // const cookiesBody = {
+            //     [window.location.href]:
+            //         Object.keys(cookies).map(key => { return { [key]: cookies[key] }; })
+            // };
 
             const response = await fetch("https://www.starcheck.sk/api/objects/cookiesapi/collection", {
                 method: "POST",
@@ -127,18 +146,20 @@ export function UpdateComponent() {
                     "Content-Type": "application/json",
                     'Access-Control-Allow-Origin': '*',
                 },
-                body: JSON.stringify(cookiesBody)
+                body: JSON.stringify(listOfLink)
             });
             return response;
         }
-        postData()
-            .then(() => {
-                //console.log("post ok");
-            })
-            .catch(() => {
-                console.error("post error");
-            });
-    }, [cookies]);
+        if (listOfLink.length > 0) {
+            postData()
+                .then(() => {
+                    //console.log("post ok");
+                })
+                .catch(() => {
+                    console.error("post error");
+                });
+        }
+    }, [listOfLink]);
 
     return null;
 }
