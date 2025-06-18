@@ -6,9 +6,7 @@ import { isInstance } from "src/utils";
 
 //checks if all items from 1st array are presented in the 2nd array
 function check(targetarr: string[], arr: string[]) {
-    return targetarr.map((e) => {
-        return (arr.includes(e.trim())) ? true : false;
-    }).every((e) => e === true);
+    return targetarr.every((e) => arr.includes(e.trim()));
 }
 
 function updatePageScripts(consentGiven: EnumCookieCategories[]) {
@@ -37,6 +35,7 @@ function updatePageScripts(consentGiven: EnumCookieCategories[]) {
                         return false;
                     }
                 });
+
                 if (check(filteredCategories, consentGiven)) {
                     //if (consentGiven.includes(attrConsentValue)) {
                     //check if attribute to be changed is presented
@@ -90,12 +89,14 @@ function updatePageScripts(consentGiven: EnumCookieCategories[]) {
                         }
                     }
                 }
+
             }
             //} else {
             //    console.error(`CookiesAPI-Visual (${node.tagName}): Attribute value '${attrConsentValue}' for '${COOKIES_API_CATEGORY_NAME}' attribute is wrong!`);
             //}
         }
     });
+
 }
 
 export function UpdateComponent() {
