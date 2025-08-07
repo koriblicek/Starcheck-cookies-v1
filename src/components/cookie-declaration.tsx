@@ -21,10 +21,10 @@ function CookieDeclarationItem({ id, onChange }: ICookieDeclarationItem) {
 
     return (
         <Fragment>
-            <Typography variant="h6">{t(`controls.cookie_${id}`)}</Typography>
+            <Typography component={'div'} variant="h6">{t(`controls.cookie_${id}`)}</Typography>
             <Grid container gap={1} alignItems='center' justifyContent='space-between'>
                 <Grid item xs >
-                    <Typography variant="subtitle2">{t(`dialogs.cookie_${id}_explanation`)}</Typography>
+                    <Typography variant="subtitle2" component={'div'}>{t(`dialogs.cookie_${id}_explanation`)}</Typography>
                 </Grid>
                 <Grid item>
                     {(isInstance(id, EnumCookieCategories) as boolean) &&

@@ -216,4 +216,4 @@ window.addEventListener("DOMContentLoaded", (event) => {
     //console.log(linksToReport);
 });
 
-console.log("COOKIEAPI-Observer is running:", consentGiven);
+// console.log("COOKIEAPI-Observer is running:", consentGiven);

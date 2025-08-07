@@ -67,7 +67,7 @@ export function BasicConsentDialog({ isOpened, onClose, onMoreDetails }: IBasicC
                 </Grid>
             </Grid>
             <DialogContent dividers sx={{ p: 1 }}>
-                <Typography variant='subtitle2'>
+                <Typography variant='subtitle2' component={'div'}>
                     {t('dialogs.using_cookies_text')}
                 </Typography>
                 <Stack direction='column' gap={0}>

@@ -50,7 +50,7 @@ function updatePageScripts(consentGiven: EnumCookieCategories[]): string[] {
                     //check if attribute to be changed is presented
                     const attrValue = node.getAttribute(`${ATTR_PREFIX}${ELEMENTS_TO_PROCEED[elementID][1]}`);
                     if (attrValue) {
-                        console.log(attrValue);
+                        // console.log(attrValue);
                         //modify correct attribute
                         node.setAttribute(`${ELEMENTS_TO_PROCEED[elementID][1]}`, attrValue);
                         //remove modified attribute
@@ -111,7 +111,7 @@ function updatePageScripts(consentGiven: EnumCookieCategories[]): string[] {
             //}
         }
     });
-    console.log(returnList);
+    //console.log(returnList);
     return returnList;
 
 }

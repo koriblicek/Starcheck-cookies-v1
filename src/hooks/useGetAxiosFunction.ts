@@ -30,7 +30,7 @@ function useGetAxiosFunction<T>() {
             setResponse(res.data as T);
         } catch (err) {
             if (axios.isCancel(err)) {
-                console.log("cancel");
+                //console.log("cancel");
                 setError(null);
             } else {
                 if (err instanceof AxiosError) {

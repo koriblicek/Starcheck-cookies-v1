@@ -6,7 +6,7 @@ import './translations/i18n';
 
 const rootElement = document.getElementById('APICOOKIES-root');
 
-console.log("COOKIEAPI-Visual is running...");
+// console.log("COOKIEAPI-Visual is running...");
 
 if (rootElement) {
 

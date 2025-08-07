@@ -90,8 +90,8 @@ export function MoreDetailsConsentDialog({ isOpened, onClose }: IMainConsentDial
                 </Grid>
             </Grid>
             <DialogContent dividers >
-                <Typography variant='h6'>{t('dialogs.using_cookies_title')}</Typography>
-                <Typography variant='subtitle2'>{t('dialogs.using_cookies_text')}</Typography>
+                <Typography component={'div'} variant='h6'>{t('dialogs.using_cookies_title')}</Typography>
+                <Typography component={'div'} variant='subtitle2'>{t('dialogs.using_cookies_text')}</Typography>
                 <Tabs
                     value={value}
                     onChange={handleChange}
