@@ -1,7 +1,7 @@
 const COOKIES_API_CATEGORY_NAME = "data-ca-category";
 const ATTR_PREFIX = "data-ca-";
 //define all elements to be proceeeed
-const elementsToProceed = [["SCRIPT", "src"], ["IFRAME", "src"], ["IMG", "src"], ["LINK", "href"]];
+const elementsToProceed = [["SCRIPT", "src"], ["IFRAME", "src"], ["LINK", "href"]]; //, ["IMG", "src"]
 
 //const all categories
 const consentCategories = ["necessary", "preferences", "statistics", "marketing", "unclasified", "unknown"];

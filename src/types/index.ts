@@ -6,7 +6,7 @@ export const COOKIE_EXPIRES = 86400 * 1000 * 31;
 export const STARCHECK_LINK = "https://www.starcheck.sk";
 export const COOKIES_API_CATEGORY_NAME = "data-ca-category";
 export const ATTR_PREFIX = "data-ca-";
-export const ELEMENTS_TO_PROCEED = [["SCRIPT", "src"], ["IFRAME", "src"], ["IMG", "src"], ["LINK", "href"]];
+export const ELEMENTS_TO_PROCEED = [["SCRIPT", "src"], ["IFRAME", "src"], ["LINK", "href"]]; //["IMG", "src"],
 
 export type PropsWithChildren<P = unknown> = P & { children: ReactNode; };
 
